@@ -1,0 +1,440 @@
+#script serie historica
+
+getwd()
+setwd ("C:/Users/Rafaela/Documents/Dissertação_mestrado/validacao")
+getwd()
+
+serie = read.table("serie_temp_min.csv", header=TRUE, sep=";")
+head(serie) #sempre mostra os 6 primeiros elementos
+names(serie) #vai mostrar os cabeçalhos das colunas/as variáveis
+View(serie)
+
+#Alto da Boa Vista
+cor.test(serie$Alto_TerraClimate,serie$Alto_INMET)
+
+#alternativa para matriz
+install.packages(("PerformanceAnalytics"))
+library("PerformanceAnalytics")
+md = serie [,c(2,3)]
+chart.Correlation(md, histogram = TRUE)
+
+# Normatização dos Dados
+shapiro.test (serie$Alto_TerraClimate)
+shapiro.test (serie$Alto_INMET)
+
+# Teste T
+t.test(serie$Alto_TerraClimate,serie$Alto_INMET, paired = FALSE, conf.level = 0.95)
+
+#Gráfico de dispersão
+
+library(ggplot2)
+library("stringr")
+
+colorvector <- c("mediumorchid1",
+                 "mediumorchid2",
+                 "mediumorchid3",
+                 "mediumorchid4",
+                 "mediumpurple",
+                 "mediumpurple1",
+                 "mediumpurple2",
+                 "mediumpurple3",
+                 "mediumpurple4",
+                 "mediumseagreen",
+                 "mediumslateblue",
+                 "mediumspringgreen",
+                 "mediumturquoise",
+                 "mediumvioletred",
+                 "midnightblue",
+                 "mintcream",
+                 "mistyrose",
+                 "mistyrose1",
+                 "mistyrose2",
+                 "mistyrose3",
+                 "mistyrose4",
+                 "moccasin",
+                 "navajowhite",
+                 "navajowhite1",
+                 "navajowhite2",
+                 "navajowhite3",
+                 "navajowhite4",
+                 "navy",
+                 "navyblue",
+                 "oldlace",
+                 "olivedrab",
+                 "olivedrab1",
+                 "olivedrab2",
+                 "olivedrab3",
+                 "olivedrab4",
+                 "orange",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange4")
+
+# Interação nas datas, rasterizando para ano
+for(i in 1:length(serie$Serie_Historica)){ 
+  year <- str_sub(serie$Serie_Historica[i],-4,-1)
+  serie$Serie_Historica[i] <- year
+}
+
+# Gera o gráfico, passando os dados totais, X e Y de acordo com as colunas e o ano como o objeto identificador pra legenda e cor
+plot <- ggplot(serie, aes(x=Alto_INMET, y=Alto_TerraClimate, color=Serie_Historica), fill = factor(Serie_Historica))+geom_point()+ 
+  scale_fill_manual(values = colorvector) + 
+  geom_smooth(method=lm , color="black", se=FALSE)
+
+# Imprime o gráfico colando um título, e alterando eixos e legenda respectivamente
+print(plot + labs(title= "Gráfico de Dispersão em Graus °C - Estação Meteorológica Alto da Boa Vista", y="Temperatura Mínima TerraClimate", x = "Temperatura Mínima INMET", colour = "Série Histórica"))
+
+#grafico dispersão simples
+
+plot(serie$Alto_INMET, serie$Alto_TerraClimate,
+     main = "Gráfico de Dispersão em Graus °C - Estação Meteorológica Alto da Boa Vista",
+     xlab = "Temperatura Mínima INMET", ylab = "Temperatura Mínima TerraClimate") +
+  abline(lm(serie$Alto_TerraClimate ~ serie$Alto_INMET), col = "red")
+
+#Campos
+cor.test(serie$Campos_TerraClimate,serie$Campos_INMET)
+
+#alternativa para matriz
+install.packages(("PerformanceAnalytics"))
+library("PerformanceAnalytics")
+md = serie [,c(4,5)]
+chart.Correlation(md, histogram = TRUE)
+
+# Normatização dos Dados
+shapiro.test (serie$Campos_TerraClimate)
+shapiro.test (serie$Campos_INMET)
+
+# Teste T
+t.test(serie$Campos_TerraClimate,serie$Campos_INMET, paired = FALSE, conf.level = 0.95)
+
+#Gráfico de dispersão
+
+library(ggplot2)
+library("stringr")
+
+colorvector <- c("mediumorchid1",
+                 "mediumorchid2",
+                 "mediumorchid3",
+                 "mediumorchid4",
+                 "mediumpurple",
+                 "mediumpurple1",
+                 "mediumpurple2",
+                 "mediumpurple3",
+                 "mediumpurple4",
+                 "mediumseagreen",
+                 "mediumslateblue",
+                 "mediumspringgreen",
+                 "mediumturquoise",
+                 "mediumvioletred",
+                 "midnightblue",
+                 "mintcream",
+                 "mistyrose",
+                 "mistyrose1",
+                 "mistyrose2",
+                 "mistyrose3",
+                 "mistyrose4",
+                 "moccasin",
+                 "navajowhite",
+                 "navajowhite1",
+                 "navajowhite2",
+                 "navajowhite3",
+                 "navajowhite4",
+                 "navy",
+                 "navyblue",
+                 "oldlace",
+                 "olivedrab",
+                 "olivedrab1",
+                 "olivedrab2",
+                 "olivedrab3",
+                 "olivedrab4",
+                 "orange",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange4")
+
+# Interação nas datas, rasterizando para ano
+for(i in 1:length(serie$Serie_Historica)){ 
+  year <- str_sub(serie$Serie_Historica[i],-4,-1)
+  serie$Serie_Historica[i] <- year
+}
+
+# Gera o gráfico, passando os dados totais, X e Y de acordo com as colunas e o ano como o objeto identificador pra legenda e cor
+plot <- ggplot(serie, aes(x=Campos_INMET, y=Campos_TerraClimate, color=Serie_Historica), fill = factor(Serie_Historica))+geom_point()+ 
+  scale_fill_manual(values = colorvector) + 
+  geom_smooth(method=lm , color="black", se=FALSE)
+
+# Imprime o gráfico colando um título, e alterando eixos e legenda respectivamente
+print(plot + labs(title= "Gráfico de Dispersão em Graus °C - Estação Meteorológica Campos", y="Temperatura Mínima TerraClimate", x = "Temperatura Mínima INMET", colour = "Série Histórica"))
+
+#grafico dispersão simples
+
+plot(serie$Campos_INMET, serie$Campos_TerraClimate,
+     main = "Gráfico de Dispersão em Graus °C - Estação Meteorológica Campos",
+     xlab = "Temperatura Mínima INMET", ylab = "Temperatura Mínima TerraClimate") +
+  abline(lm(serie$Campos_TerraClimate ~ serie$Campos_INMET), col = "red")
+
+#Cordeiro
+cor.test(serie$Cordeiro_TerraClimate,serie$Cordeiro_INMET)
+
+#alternativa para matriz
+install.packages(("PerformanceAnalytics"))
+library("PerformanceAnalytics")
+mdd = serie [,c(6,7)]
+chart.Correlation(mdd, histogram = TRUE)
+
+# Normatização dos Dados
+shapiro.test (serie$Cordeiro_TerraClimate)
+shapiro.test (serie$Cordeiro_INMET)
+
+# Teste T
+t.test(serie$Cordeiro_TerraClimate,serie$Cordeiro_INMET, paired = FALSE, conf.level = 0.95)
+
+#Gráfico de dispersão
+
+library(ggplot2)
+library("stringr")
+
+colorvector <- c("mediumorchid1",
+                 "mediumorchid2",
+                 "mediumorchid3",
+                 "mediumorchid4",
+                 "mediumpurple",
+                 "mediumpurple1",
+                 "mediumpurple2",
+                 "mediumpurple3",
+                 "mediumpurple4",
+                 "mediumseagreen",
+                 "mediumslateblue",
+                 "mediumspringgreen",
+                 "mediumturquoise",
+                 "mediumvioletred",
+                 "midnightblue",
+                 "mintcream",
+                 "mistyrose",
+                 "mistyrose1",
+                 "mistyrose2",
+                 "mistyrose3",
+                 "mistyrose4",
+                 "moccasin",
+                 "navajowhite",
+                 "navajowhite1",
+                 "navajowhite2",
+                 "navajowhite3",
+                 "navajowhite4",
+                 "navy",
+                 "navyblue",
+                 "oldlace",
+                 "olivedrab",
+                 "olivedrab1",
+                 "olivedrab2",
+                 "olivedrab3",
+                 "olivedrab4",
+                 "orange",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange4")
+
+# Interação nas datas, rasterizando para ano
+for(i in 1:length(serie$Serie_Historica)){ 
+  year <- str_sub(serie$Serie_Historica[i],-4,-1)
+  serie$Serie_Historica[i] <- year
+}
+
+# Gera o gráfico, passando os dados totais, X e Y de acordo com as colunas e o ano como o objeto identificador pra legenda e cor
+plot <- ggplot(serie, aes(x=Cordeiro_INMET, y=Cordeiro_TerraClimate, color=Serie_Historica), fill = factor(Serie_Historica))+geom_point()+ 
+  scale_fill_manual(values = colorvector) + 
+  geom_smooth(method=lm , color="black", se=FALSE)
+
+# Imprime o gráfico colando um título, e alterando eixos e legenda respectivamente
+print(plot + labs(title= "Gráfico de Dispersão em Graus °C - Estação Meteorológica Cordeiro", y="Temperatura Mínima TerraClimate", x = "Temperatura Mínima INMET", colour = "Série Histórica"))
+
+#grafico dispersão simples
+
+plot(serie$Cordeiro_INMET, serie$Cordeiro_TerraClimate,
+     main = "Gráfico de Dispersão em Graus °C - Estação Meteorológica Cordeiro",
+     xlab = "Temperatura Mínima INMET", ylab = "Temperatura Mínima TerraClimate") +
+  abline(lm(serie$Cordeiro_TerraClimate ~ serie$Cordeiro_INMET), col = "red")
+
+#Resende
+cor.test(serie$Resende_TerraClimate,serie$Resende_INMET)
+
+#alternativa para matriz
+install.packages(("PerformanceAnalytics"))
+library("PerformanceAnalytics")
+mddd = serie [,c(8,9)]
+chart.Correlation(mdd, histogram = TRUE)
+
+# Normatização dos Dados
+shapiro.test (serie$Resende_TerraClimate)
+shapiro.test (serie$Resende_INMET)
+
+# Teste T
+t.test(serie$Resende_TerraClimate,serie$Resende_INMET, paired = FALSE, conf.level = 0.95)
+
+#Gráfico de dispersão
+
+library(ggplot2)
+library("stringr")
+
+colorvector <- c("mediumorchid1",
+                 "mediumorchid2",
+                 "mediumorchid3",
+                 "mediumorchid4",
+                 "mediumpurple",
+                 "mediumpurple1",
+                 "mediumpurple2",
+                 "mediumpurple3",
+                 "mediumpurple4",
+                 "mediumseagreen",
+                 "mediumslateblue",
+                 "mediumspringgreen",
+                 "mediumturquoise",
+                 "mediumvioletred",
+                 "midnightblue",
+                 "mintcream",
+                 "mistyrose",
+                 "mistyrose1",
+                 "mistyrose2",
+                 "mistyrose3",
+                 "mistyrose4",
+                 "moccasin",
+                 "navajowhite",
+                 "navajowhite1",
+                 "navajowhite2",
+                 "navajowhite3",
+                 "navajowhite4",
+                 "navy",
+                 "navyblue",
+                 "oldlace",
+                 "olivedrab",
+                 "olivedrab1",
+                 "olivedrab2",
+                 "olivedrab3",
+                 "olivedrab4",
+                 "orange",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange4")
+
+# Interação nas datas, rasterizando para ano
+for(i in 1:length(serie$Serie_Historica)){ 
+  year <- str_sub(serie$Serie_Historica[i],-4,-1)
+  serie$Serie_Historica[i] <- year
+}
+
+# Gera o gráfico, passando os dados totais, X e Y de acordo com as colunas e o ano como o objeto identificador pra legenda e cor
+plot <- ggplot(serie, aes(x=Resende_INMET, y=Resende_TerraClimate, color=Serie_Historica), fill = factor(Serie_Historica))+geom_point()+ 
+  scale_fill_manual(values = colorvector) + 
+  geom_smooth(method=lm , color="black", se=FALSE)
+
+# Imprime o gráfico colando um título, e alterando eixos e legenda respectivamente
+print(plot + labs(title= "Gráfico de Dispersão em Graus °C - Estação Meteorológica Resende", y="Temperatura Mínima TerraClimate", x = "Temperatura Mínima INMET", colour = "Série Histórica"))
+
+#grafico dispersão simples
+
+plot(serie$Resende_INMET, serie$Resende_TerraClimate,
+     main = "Gráfico de Dispersão em Graus °C - Estação Meteorológica Resende",
+     xlab = "Temperatura Mínima INMET", ylab = "Temperatura Mínima TerraClimate") +
+  abline(lm(serie$Resende_TerraClimate ~ serie$Resende_INMET), col = "red")
+
+#Carmo
+cor.test(serie$Carmo_TerraClimate,serie$Carmo_INMET)
+
+#alternativa para matriz
+install.packages(("PerformanceAnalytics"))
+library("PerformanceAnalytics")
+mddt = serie [,c(10,11)]
+chart.Correlation(mddt, histogram = TRUE)
+
+# Normatização dos Dados
+shapiro.test (serie$Carmo_TerraClimate)
+shapiro.test (serie$Carmo_INMET)
+
+# Teste T
+t.test(serie$Carmo_TerraClimate,serie$Carmo_INMET, paired = FALSE, conf.level = 0.95)
+
+#Gráfico de dispersão
+
+library(ggplot2)
+library("stringr")
+
+colorvector <- c("mediumorchid1",
+                 "mediumorchid2",
+                 "mediumorchid3",
+                 "mediumorchid4",
+                 "mediumpurple",
+                 "mediumpurple1",
+                 "mediumpurple2",
+                 "mediumpurple3",
+                 "mediumpurple4",
+                 "mediumseagreen",
+                 "mediumslateblue",
+                 "mediumspringgreen",
+                 "mediumturquoise",
+                 "mediumvioletred",
+                 "midnightblue",
+                 "mintcream",
+                 "mistyrose",
+                 "mistyrose1",
+                 "mistyrose2",
+                 "mistyrose3",
+                 "mistyrose4",
+                 "moccasin",
+                 "navajowhite",
+                 "navajowhite1",
+                 "navajowhite2",
+                 "navajowhite3",
+                 "navajowhite4",
+                 "navy",
+                 "navyblue",
+                 "oldlace",
+                 "olivedrab",
+                 "olivedrab1",
+                 "olivedrab2",
+                 "olivedrab3",
+                 "olivedrab4",
+                 "orange",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange1",
+                 "orange2",
+                 "orange3",
+                 "orange4")
+
+# Interação nas datas, rasterizando para ano
+for(i in 1:length(serie$Serie_Historica)){ 
+  year <- str_sub(serie$Serie_Historica[i],-4,-1)
+  serie$Serie_Historica[i] <- year
+}
+
+# Gera o gráfico, passando os dados totais, X e Y de acordo com as colunas e o ano como o objeto identificador pra legenda e cor
+plot <- ggplot(serie, aes(x=Carmo_INMET, y=Carmo_TerraClimate, color=Serie_Historica), fill = factor(Serie_Historica))+geom_point()+ 
+  scale_fill_manual(values = colorvector) + 
+  geom_smooth(method=lm , color="black", se=FALSE)
+
+# Imprime o gráfico colando um título, e alterando eixos e legenda respectivamente
+print(plot + labs(title= "Gráfico de Dispersão em Graus °C - Estação Meteorológica Carmo", y="Temperatura Mínima TerraClimate", x = "Temperatura Mínima INMET", colour = "Série Histórica"))
+
+#grafico dispersão simples
+
+plot(serie$Carmo_INMET, serie$Carmo_TerraClimate,
+     main = "Gráfico de Dispersão em Graus °C - Estação Meteorológica Carmo",
+     xlab = "Temperatura Mínima INMET", ylab = "Temperatura Mínima TerraClimate") +
+  abline(lm(serie$Carmo_TerraClimate ~ serie$Carmo_INMET), col = "red")
